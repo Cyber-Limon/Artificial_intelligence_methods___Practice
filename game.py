@@ -46,12 +46,12 @@ class Game:
                     if checker.king:
                         white_kings += 1
                     else:
-                        white_checkers += 1
+                        white_checkers += len(width) - i + 1
                 else:
                     if checker.king:
                         black_kings += 1
                     else:
-                        black_checkers += 1
+                        black_checkers += i + 1
 
         if color == "white":
             value = 5 * (white_checkers - black_checkers) + 10 * (white_kings - black_kings)
@@ -117,6 +117,7 @@ class Game:
                     enemy_moves.append(new_moves)
 
                     values = self.minimax(new_board, new_moves, new_flag, self.color)
+                    print(values)
                     enemy_values.append(values)
 
                     if len(values) == 0:
@@ -128,6 +129,8 @@ class Game:
                         value = current_value
                         checker_need = checker
                         move_need = subsequence
+
+                    print(value)
 
             table = self.table(moves, enemy_moves, enemy_values, value)
             self.take_or_move(self.board, checker_need, move_need, flag)
@@ -204,7 +207,7 @@ class Game:
 
             for j in values[i]:
                 if isinstance(j, int):
-                    if m is None or m < j:
+                    if m is None or m > j:
                         m = j
 
             if m is None:
