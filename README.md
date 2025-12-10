@@ -13,9 +13,5 @@
 - Во время боя простая шашка может превратиться в дамку и сразу продолжить бой по правилам дамки.
 - При наличии нескольких вариантов боя можно выбрать любой из них.
 
-### Функции
-- Белые: 5 * (white_checkers - black_checkers) + 10 * (white_kings - black_kings)
-- Черные: 3 * (black_checkers - white_checkers) + 6 * (black_kings - white_kings)
-
 ### Приложение
 https://disk.yandex.ru/d/q4qU0JW65vt8Qw
