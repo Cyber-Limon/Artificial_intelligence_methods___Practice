@@ -68,17 +68,27 @@ class Game:
             return board.apply_move(checker, move)
 
 
-    def minimax(self, board, moves, flag, color):
+    def minimax(self, board, moves, flag, color, value):
         values = []
+
+        cut = False
 
         for checker, move in moves:
             for subsequence in move:
+                if cut:
+                    values.append("-")
+                    continue
+
                 new_board = board.__copy__()
                 new_checker = new_board.find_checker(checker.x, checker.y)
 
                 self.take_or_move(new_board, new_checker, subsequence, flag)
 
-                values.append(self.evaluation_function(new_board, color))
+                current_value = self.evaluation_function(new_board, color)
+                values.append(current_value)
+
+                if value is not None and current_value < value:
+                    cut = True
 
         return values
 
@@ -116,21 +126,22 @@ class Game:
 
                     enemy_moves.append(new_moves)
 
-                    values = self.minimax(new_board, new_moves, new_flag, self.color)
-                    print(values)
+                    values = self.minimax(new_board, new_moves, new_flag, self.color, value)
                     enemy_values.append(values)
 
                     if len(values) == 0:
                         current_value = self.evaluation_function(new_board, self.color)
                     else:
-                        current_value = min(values)
+                        current_value = None
+                        for i in values:
+                            if isinstance(i, int):
+                                if current_value is None or current_value > i:
+                                    current_value = i
 
                     if value is None or value < current_value:
                         value = current_value
                         checker_need = checker
                         move_need = subsequence
-
-                    print(value)
 
             table = self.table(moves, enemy_moves, enemy_values, value)
             self.take_or_move(self.board, checker_need, move_need, flag)
@@ -169,21 +180,26 @@ class Game:
         values = [["-" for _ in columns] for _ in rows]
 
         for move in enemy_moves:
+            k = 0
             for subsequence in move:
                 for i in subsequence[1]:
                     for j in range(len(columns)):
                         if columns[j] == ((subsequence[0].x, subsequence[0].y), i):
-                            values[enemy_moves.index(move)][j] = enemy_values[enemy_moves.index(move)][move.index(subsequence)]
+                            values[enemy_moves.index(move)][j] = enemy_values[enemy_moves.index(move)][k]
+                            k += 1
+                            break
 
         for row in rows:
             start = str(width[row[0][0]]) + str(height[row[0][1]])
 
             if isinstance(row[1], tuple):
-                end = str(width[row[1][0]]) + str(height[row[1][1]])
+                rows_normalized.append(start + "->" + str(width[row[1][0]]) + str(height[row[1][1]]))
             else:
-                end = str(width[row[1][-1][1][0]]) + str(height[row[1][-1][1][1]])
-
-            rows_normalized.append(f"{start}->{end}")
+                end = ""
+                for i in range(len(row[1])):
+                    end += ("x" + str(width[row[1][i][0][0]]) + str(height[row[1][i][0][1]]) +
+                           "->" + str(width[row[1][i][1][0]]) + str(height[row[1][i][1][1]]))
+                rows_normalized.append(f"{start}{end}")
 
         for column in columns:
             start = str(width[column[0][0]]) + str(height[column[0][1]])
