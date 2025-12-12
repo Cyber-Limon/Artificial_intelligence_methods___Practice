@@ -6,7 +6,7 @@ from checker import width, height
 class Board:
     def __init__(self):
         self.cells = [[None for _ in range(len(width))] for _ in range(len(height))]
-        self.output = [["O" for _ in range(len(width))] for _ in range(len(height))]
+        self.output = [[" " for _ in range(len(width))] for _ in range(len(height))]
 
 
     def __copy__(self):
@@ -36,15 +36,18 @@ class Board:
     def add(self, checker):
         self.cells[checker.y][checker.x] = checker
 
-        if checker.color == "white":
+        if checker.color == "white" and checker.king:
             self.output[checker.y][checker.x] = "W"
-        else:
+        elif checker.color == "white" and not checker.king:
+            self.output[checker.y][checker.x] = "w"
+        elif checker.color == "black" and checker.king:
             self.output[checker.y][checker.x] = "B"
-
+        else:
+            self.output[checker.y][checker.x] = "b"
 
     def delete(self, checker):
         self.cells[checker.y][checker.x] = None
-        self.output[checker.y][checker.x] = "O"
+        self.output[checker.y][checker.x] = " "
 
 
     def apply_take(self, checker, move):

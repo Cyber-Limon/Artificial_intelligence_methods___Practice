@@ -9,19 +9,23 @@ class Game:
     def __init__(self):
         self.board = Board()
 
-        self.w1 = Checker(0, 5, "white", self.board)
-        self.w2 = Checker(2, 5, "white", self.board)
-        self.w3 = Checker(4, 5, "white", self.board)
-        self.w4 = Checker(1, 4, "white", self.board)
-        self.w5 = Checker(3, 4, "white", self.board)
-        self.w6 = Checker(5, 4, "white", self.board)
+        for i in range(len(height)):
+            for j in range(len(width)):
+                if i == len(height) / 2 or i == len(height) / 2 - 1:
+                    continue
 
-        self.b1 = Checker(0, 1, "black", self.board)
-        self.b2 = Checker(2, 1, "black", self.board)
-        self.b3 = Checker(4, 1, "black", self.board)
-        self.b4 = Checker(1, 0, "black", self.board)
-        self.b5 = Checker(3, 0, "black", self.board)
-        self.b6 = Checker(5, 0, "black", self.board)
+                if i % 2 == 0:
+                    if j % 2 == 1:
+                        if i > len(height) / 2:
+                            Checker(j, i, "white", self.board)
+                        else:
+                            Checker(j, i, "black", self.board)
+                else:
+                    if j % 2 == 0:
+                        if i > len(height) / 2:
+                            Checker(j, i, "white", self.board)
+                        else:
+                            Checker(j, i, "black", self.board)
 
         self.color = "white"
 
@@ -46,7 +50,7 @@ class Game:
                     if checker.king:
                         white_kings += 1
                     else:
-                        white_checkers += len(width) - i + 1
+                        white_checkers += len(height) - i + 1
                 else:
                     if checker.king:
                         black_kings += 1
@@ -54,9 +58,9 @@ class Game:
                         black_checkers += i + 1
 
         if color == "white":
-            value = 5 * (white_checkers - black_checkers) + 10 * (white_kings - black_kings)
+            value = white_checkers - black_checkers + white_kings - black_kings
         else:
-            value = 3 * (black_checkers - white_checkers) + 6 * (black_kings - white_kings)
+            value = black_checkers * black_kings - white_checkers * white_kings
 
         return value
 
