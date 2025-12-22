@@ -50,7 +50,7 @@ class Game:
                     if checker.king:
                         white_kings += 1
                     else:
-                        white_checkers += len(height) - i + 1
+                        white_checkers += len(height) - i 
                 else:
                     if checker.king:
                         black_kings += 1
@@ -248,3 +248,4 @@ class Game:
         table.field_names = columns_normalized
 
         return table
+
